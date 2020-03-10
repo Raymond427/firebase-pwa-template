@@ -56,13 +56,11 @@ const Form = ({ children, onSubmit, submitValue = 'Submit', submittingValue, sub
     const addToInValidFields = name => setInvalidFeilds(fields => [ ...fields, name ])
     const removeFromInValidFields = name => setInvalidFeilds(fields => fields.filter(fieldName => fieldName !== name))
 
-    const inputs = Children.map(children, child => {
-        const displayName = (child.type && child.type.displayName) ? child.type.displayName : null
-        const isStripeElement = displayName ==='CardElement'
-        return isStripeElement
-            ? cloneElement(child)
-            : cloneElement(child, { submissionAttempted, addToInValidFields, removeFromInValidFields })
-    })
+    const inputs = Children.map(children, child =>
+        child.props.valueHook
+            ? cloneElement(child, { submissionAttempted, addToInValidFields, removeFromInValidFields })
+            : cloneElement(child)
+    )
 
     return (
         <form className='form' id={id || null}>
